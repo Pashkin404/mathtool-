@@ -3,44 +3,38 @@ import math
 
 MAX_VALUE = 10000
 
-def print_help():
-    print("решение уравнений вида A*x^2 + B*x + C = 0")
-    print()
-    print("Использование:")
-    print("    python mathtool.py                         вывод справки")
-    print("    python mathtool.py --help                  вывод справки")
-    print("    python mathtool.py solve                   ввод коэффициентов с клавиатуры")
-    print("    python mathtool.py solve -a 1 -b -3 -c 2   решение с заданными коэффициентами")
-    print()
-    print("Коэффициенты A, B, C — целые числа, по модулю не превышающие 10000.")
-
 def error(msg):
     print(msg, file=sys.stderr)
     sys.exit(1)
 
-def parse_args():
-    args = sys.argv[1:]  # отбрасываем имя файла
+def print_help():
+    print("mathtool — решение уравнений вида A*x^2 + B*x + C = 0")
+    print("Использование:")
+    print("    python mathtool.py                         вывод справки")
+    print("    python mathtool.py --help                  вывод справки")
+    print("    python mathtool.py solve                   ввод коэффициентов с клавиатуры")
+    print("    python mathtool.py solve -a 1 -b -3 -c 2   решение с заданными коэффициентами\n")
+    print(f"Коэффициенты A, B, C — целые числа, по модулю не превышающие {MAX_VALUE}.")
 
-    if len(args) == 0 or args[0] == "--help":
+def parse_args():
+    if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == "--help"):
         print_help()
         sys.exit(0)
 
-    if args[0] != "solve":
+    if sys.argv[1] != "solve":
         error("ОШИБКА: неизвестная команда")
 
-    if len(args) == 1:
-        # ввод коэффициентов с клавиатуры
-        return None  # сигнализируем, что нужен интерактивный ввод
+    if len(sys.argv) == 2:
+        return None
 
-    if len(args) == 7:
-        if args[1] != "-a" or args[3] != "-b" or args[5] != "-c":
+    if len(sys.argv) == 8:
+        if sys.argv[2] != "-a" or sys.argv[4] != "-b" or sys.argv[6] != "-c":
             error("ОШИБКА: неизвестный параметр")
-        return args[2], args[4], args[6]  # возвращаем строки, преобразование — далее
+        return sys.argv[3], sys.argv[5], sys.argv[7]
 
     error("ОШИБКА: неверный набор параметров")
 
 def get_coefficients(source):
-    """source — кортеж строк (из параметров) или None (интерактивный ввод)."""
     try:
         if source is None:
             a = int(input("Введите A: "))
@@ -50,18 +44,16 @@ def get_coefficients(source):
             a = int(source[0])
             b = int(source[1])
             c = int(source[2])
+        return a, b, c
     except ValueError:
         error("ОШИБКА: коэффициент не является целым числом")
-    return a, b, c
 
 def validate(a, b, c):
     if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
         error("ОШИБКА: значение вне допустимого диапазона")
 
-
 def solve(a, b, c):
     if a == 0:
-        # уравнение не квадратное
         if b != 0:
             print("Уравнение линейное")
             x = -c / b
@@ -69,7 +61,6 @@ def solve(a, b, c):
         else:
             error("ОШИБКА: это не уравнение, неизвестное отсутствует")
     else:
-        # квадратное уравнение
         print("Уравнение квадратное")
         d = b * b - 4 * a * c
         print(f"Дискриминант = {d}")
