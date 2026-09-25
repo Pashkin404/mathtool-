@@ -33,7 +33,7 @@ def parse_args():
         return sys.argv[3], sys.argv[5], sys.argv[7]
 
     error("ОШИБКА: неверный набор параметров")
-
+#инпут+проверка 
 def get_coefficients(source):
     try:
         if source is None:
@@ -51,7 +51,7 @@ def get_coefficients(source):
 def validate(a, b, c):
     if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
         error("ОШИБКА: значение вне допустимого диапазона")
-
+#решение,проверка на линейность
 def solve(a, b, c):
     if a == 0:
         if b != 0:
