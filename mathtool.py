@@ -13,7 +13,7 @@ def print_help():
     print("    python mathtool.py                         вывод справки")
     print("    python mathtool.py --help                  вывод справки")
     print("    python mathtool.py solve                   ввод коэффициентов с клавиатуры")
-    print("    python mathtool.py solve -a 1 -b -3 -c 2   решение с заданными коэффициентами\n")
+    print("    python mathtool.py solve -a 0 -b 2 -c -9   решение с заданными коэффициентами\n")
     print(f"Коэффициенты A, B, C — целые числа, по модулю не превышающие {MAX_VALUE}.")
 
 def parse_args():
@@ -33,7 +33,7 @@ def parse_args():
         return sys.argv[3], sys.argv[5], sys.argv[7]
 
     error("ОШИБКА: неверный набор параметров")
-#инпут+проверка 
+
 def get_coefficients(source):
     try:
         if source is None:
@@ -51,12 +51,12 @@ def get_coefficients(source):
 def validate(a, b, c):
     if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
         error("ОШИБКА: значение вне допустимого диапазона")
-#решение,проверка на линейность
+
 def solve(a, b, c):
     if a == 0:
         if b != 0:
             print("Уравнение линейное")
-            x = -c / b
+            x = int(-c / b)
             print(f"x = {x:.3f}")
         else:
             error("ОШИБКА: это не уравнение, неизвестное отсутствует")
