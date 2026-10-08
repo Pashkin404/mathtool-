@@ -1,4 +1,3 @@
-# calc/stats.py
 import math
 
 def get_sum(values):

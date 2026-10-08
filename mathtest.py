@@ -50,8 +50,14 @@ def handle_stats(args):
         except FileNotFoundError:
             raise ValueError(f"файл '{args.input}' не найден")
     else:
-        lines = sys.stdin.readlines()
-
+        # lines = sys.stdin.readlines()
+        lines=[]
+        while True:
+            str = input()
+            if str =="":
+                break
+            # print(str)
+            lines.append(str)
     values = []
     for line in lines:
         for token in line.split():
