@@ -48,16 +48,18 @@ def handle_stats(args):
             with open(args.input, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
         except FileNotFoundError:
-            raise ValueError(f"файл '{args.input}' не найден")
+            raise OSError("файл не открывается")
     else:
-        # lines = sys.stdin.readlines()
-        lines=[]
+        lines = []
         while True:
-            str = input()
-            if str =="":
+            try:
+                user_str = input()
+                if user_str == "":
+                    break
+                lines.append(user_str)
+            except EOFError:
                 break
-            # print(str)
-            lines.append(str)
+                
     values = []
     for line in lines:
         for token in line.split():
@@ -80,28 +82,26 @@ def handle_stats(args):
         raise ValueError("последовательность пуста")
 
     metrics = [
-        ("Сумма", stats.get_sum, True),
-        ("Среднее арифметическое", stats.get_mean, True),
-        ("Сумма квадратов элементов", stats.get_sum_sq, True),
-        ("Среднее квадратическое", stats.get_rms, True),
-        ("Дисперсия", stats.get_variance, True),
-        ("СКО (отклонение по N)", stats.get_std_dev_n, True),
-        ("Стандартное отклонение (отклонение по N - 1)", stats.get_std_dev_n1, True),
-        ("Наименьшее значение", stats.get_min, True),
-        ("Наибольшее значение", stats.get_max, True),
-        ("Количество положительных чисел", stats.get_positives, False),
-        ("Количество отрицательных чисел", stats.get_negatives, False)
+        ("Количество",     lambda v: len(v),             "d"),
+        ("Сумма",          stats.get_sum,                ".3f"),
+        ("Ср. арифм.",     stats.get_mean,               ".3f"),
+        ("Сумма кв.",      stats.get_sum_sq,             ".3f"),
+        ("Ср. кв.",        stats.get_rms,                ".3f"),
+        ("Дисперсия",      stats.get_variance,           ".3f"),
+        ("СКО",            stats.get_std_dev_n,          ".3f"),
+        ("Станд. откл.",   stats.get_std_dev_n1,         ".3f"),
+        ("Наименьшее",     stats.get_min,                ".3f"),
+        ("Наибольшее",     stats.get_max,                ".3f"),
+        ("Положительных",  stats.get_positives,          "d"),
+        ("Отрицательных",  stats.get_negatives,          "d")
     ]
 
-    for label, func, is_float in metrics:
+    for label, func, fmt in metrics:
         res = func(values)
         if res is None:
             print(f"{label}: НЕ СУЩЕСТВУЕТ")
         else:
-            if is_float:
-                print(f"{label}: {res:.3f}")
-            else:
-                print(f"{label}: {res}")
+            print(f"{label}: {res:{fmt}}")
     return 0
 
 def handle_series(args):
@@ -121,8 +121,8 @@ def handle_series(args):
     calc_func = series_map[args.func]
     formula, count, total_sum = calc_func(terms=args.terms, eps=args.eps)
     
-    print(f"Формула ряда: {formula}")
-    print(f"Количество слагаемых: {count}")
+    print(f"S = {formula}")
+    print(f"Слагаемых: {count}")
     print(f"Сумма ряда: {total_sum:.4f}")
     return 0
 
@@ -137,7 +137,7 @@ def handle_integrate(args):
         steps=args.steps
     )
 
-    print(f"Формула функции: {formula}")
+    print(f"F(x) = {formula}")
     print(f"Значение интеграла: {result_val:.4f}")
     return 0
 
@@ -159,7 +159,7 @@ def main(argv):
         elif args.command == "integrate":
             return handle_integrate(args)
             
-    except ValueError as error:
+    except (ValueError, OSError) as error:
         print(f"ОШИБКА: {error}", file=sys.stderr)
         return 1
 
