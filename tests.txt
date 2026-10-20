@@ -98,3 +98,46 @@ stdin: <пусто>
 stdout: <пусто>
 stderr: ОШИБКА: количество шагов должно быть в диапазоне от 1 до 100000
 Код возврата: 1
+Команда: python mattest.py integrate --func ratio --from 0 --to 20 --steps 1000
+stdin: <пусто>
+stdout:
+F(x) = x / (x + 1)
+Значение интеграла: 16.9459
+stderr: <пусто>
+Код возврата: 0
+
+Команда: python mattest.py integrate --func root --from -4.9 --to 4.9 --steps 1000
+stdin: <пусто>
+stdout:
+F(x) = sqrt(x^2 + 1)
+Значение интеграла: 26.7976
+stderr: <пусто>
+Код возврата: 0
+
+Команда: python mattest.py integrate --func ratio --from -1 --to 15 --steps 100
+stdin: <пусто>
+stdout: <пусто>
+stderr: ОШИБКА: для функции ratio пределы должны быть внутри [0.0; 20.0]
+Код возврата: 1
+
+Команда: python mattest.py integrate --func root --from -5 --to 5 --steps 100
+stdin: <пусто>
+stdout: <пусто>
+stderr: ОШИБКА: для функции root пределы должны быть строго внутри (-5.0; 5.0)
+Код возврата: 1
+
+Команда: python mattest.py integrate --func ratio --from 5 --to 2 --steps 500
+stdin: <пусто>
+stdout: <пусто>
+stderr: ОШИБКА: нижний предел должен быть меньше верхнего предела
+Код возврата: 1
+
+Команда: python mattest.py integrate --func ratio --from 0 --to 10 --steps 100002
+stdin: <пусто>
+stdout: <пусто>
+stderr: ОШИБКА: количество шагов должно быть в диапазоне от 1 до 100000
+Код возврата: 1
+
+def term_triplus(n: int) -> float:
+    return ((-1) ** (n - 1)) / (3 * n + 1)
+"triplus": series.sum_triplus 
